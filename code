@@ -1,0 +1,35 @@
+import urllib
+from bs4 import BeautifulSoup
+
+def pop_finder():
+  zipcode = raw_input('Zip code: ')
+  url = 'http://uszip.com/zip/'+zipcode
+  html_content = urllib.urlopen(url).read()         # reads the html source code
+  soup = BeautifulSoup(html_content, 'html.parser) # makes a BeautifulSoup object from the html source
+  
+  print city(soup)
+  print 'Total Population: ', find_pop(soup)
+  
+
+def find_pop(soup):
+  s = str(soup.find('dd'))      # finds the element with the tag 'dd' this tag contains the population
+  l =[]
+  count = 0
+  for i in s:
+    if i == '<':
+      count += 1
+    if count == 2:
+      break
+    if i.isdigit():
+      l.append(i)
+      
+ return ''.join(l)          #turns the list l[] into a string
+ 
+def city(soup):
+  s = str(soup.title.get_text())
+  return s.replace('zip code', '')    # replaces the string 'zip code' found in title with '' so it only returns the location
+  
+  
+if "__name__" == "__main__":
+  pop_finder()
+  
